@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Colorful To-Do List</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-purple-400 via-pink-300 to-blue-400">
+
+    <!-- Main Container -->
+    <div class="max-w-xl mx-auto px-4 py-10">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+
+            <div class="text-6xl mb-3">
+                
+            </div>
+
+            <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
+                My To-Do List
+            </h1>
+
+            <p class="text-white mt-2 text-lg">
+                Organize your academic & personal tasks 
+            </p>
+
+        </div>
+
+
+        <!-- Main Card -->
+        <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-6">
+
+            <!-- Add Task -->
+            <div class="flex gap-2 mb-6">
+
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder=" Enter your task..."
+                    class="flex-1 px-4 py-3 rounded-xl border-2 border-purple-200
+                           focus:outline-none focus:border-purple-500
+                           focus:ring-2 focus:ring-purple-200"
+                >
+
+                <button
+                    onclick="addTask()"
+                    class="bg-gradient-to-r from-purple-600 to-pink-500
+                           text-white font-bold px-5 py-3 rounded-xl
+                           hover:scale-105 transition duration-200 shadow-md"
+                >
+                    + Add
+                </button>
+
+            </div>
+
+
+            <!-- Task List -->
+            <ul id="taskList" class="space-y-3">
+            </ul>
+
+
+            <!-- Empty Message -->
+            <div id="emptyMessage"
+                 class="text-center py-8 text-gray-400">
+
+                <div class="text-5xl mb-2">
+                    
+                </div>
+
+                <p class="font-medium">
+                    No tasks yet!
+                </p>
+
+                <p class="text-sm">
+                    Add your first task above 
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer -->
+        <p class="text-center text-white mt-6 font-medium">
+            Stay organized • Stay productive 
+        </p>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script>
+
+        // Add Task
+        function addTask() {
+
+            const input = document.getElementById("taskInput");
+            const taskText = input.value.trim();
+
+            // Check empty input
+            if (taskText === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            // Create task
+            const li = document.createElement("li");
+
+            li.className =
+                "flex items-center justify-between gap-3 " +
+                "bg-gradient-to-r from-purple-50 to-pink-50 " +
+                "border-l-4 border-purple-500 rounded-xl p-4 " +
+                "shadow-sm hover:shadow-md transition";
+
+
+            // Task HTML
+            li.innerHTML = `
+
+                <div class="flex items-center gap-3 flex-1">
+
+                    <input
+                        type="checkbox"
+                        onchange="completeTask(this)"
+                        class="w-5 h-5 accent-purple-600 cursor-pointer"
+                    >
+
+                    <span class="task-text text-gray-700 font-medium">
+                        ${taskText}
+                    </span>
+
+                </div>
+
+                <button
+                    onclick="deleteTask(this)"
+                    class="bg-red-500 hover:bg-red-600
+                           text-white px-3 py-2 rounded-lg
+                           text-sm font-semibold transition"
+                >
+                    🗑️
+                </button>
+
+            `;
+
+
+            // Add task to list
+            document.getElementById("taskList").appendChild(li);
+
+            // Clear input
+            input.value = "";
+
+            // Update message
+            updateEmptyMessage();
+        }
+
+
+        // Complete Task
+        function completeTask(checkbox) {
+
+            const taskText =
+                checkbox.parentElement.querySelector(".task-text");
+
+            if (checkbox.checked) {
+
+                taskText.classList.add(
+                    "line-through",
+                    "text-gray-400"
+                );
+
+                checkbox.parentElement.parentElement.classList.remove(
+                    "border-purple-500"
+                );
+
+                checkbox.parentElement.parentElement.classList.add(
+                    "border-green-500",
+                    "bg-green-50"
+                );
+
+            } else {
+
+                taskText.classList.remove(
+                    "line-through",
+                    "text-gray-400"
+                );
+
+                checkbox.parentElement.parentElement.classList.remove(
+                    "border-green-500",
+                    "bg-green-50"
+                );
+
+                checkbox.parentElement.parentElement.classList.add(
+                    "border-purple-500"
+                );
+            }
+        }
+
+
+        // Delete Task
+        function deleteTask(button) {
+
+            const task = button.parentElement;
+
+            task.remove();
+
+            updateEmptyMessage();
+        }
+
+
+        // Empty Message
+        function updateEmptyMessage() {
+
+            const taskList = document.getElementById("taskList");
+            const emptyMessage =
+                document.getElementById("emptyMessage");
+
+            if (taskList.children.length === 0) {
+
+                emptyMessage.style.display = "block";
+
+            } else {
+
+                emptyMessage.style.display = "none";
+
+            }
+        }
+
+
+        // Enter Key
+        document.getElementById("taskInput").addEventListener(
+            "keypress",
+            function(event) {
+
+                if (event.key === "Enter") {
+                    addTask();
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
